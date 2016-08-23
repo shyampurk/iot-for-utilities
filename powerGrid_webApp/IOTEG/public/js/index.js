@@ -1,7 +1,7 @@
 
 pubnub = PUBNUB({                          
-    publish_key   : 'demo',
-    subscribe_key : 'demo'
+    publish_key   : 'pub-c-06039a79-c423-4a3f-a838-30d86ee08a5e',
+    subscribe_key : 'sub-c-8bafb53a-682a-11e6-933d-02ee2ddab7fe'
 });
 
 var sunsolPan,solPanhome,homeS1,homeS2,gridS3,s2Grid,s2Bulb,s2Fan,s3Bulb,s3Fan;
@@ -21,7 +21,7 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 *****************************************************************************************************/		
 		function lineColour(sbulb,sfan,sgrid){
 
-			console.log(sbulb,sfan,sgrid)
+			console.log("The line colour function","Load1:",sbulb,"Load2",sfan,"Grid",sgrid)
 			bulb = sbulb;
 			fan = sfan;
 			grid = sgrid;
@@ -105,6 +105,8 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 			config.yellowZones = [{ from: config.min + range*0.75, to: config.min + range*0.9 }];
 			config.redZones = [{ from: config.min + range*0.9, to: config.max }];
 			
+			
+
 			gauges[name] = new Gauge(name + "Gauge", config);
 			gauges[name].render();
 		}
@@ -122,17 +124,17 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 			{
 				if(key == "sensor1"){
 					var value1 = ssensor1;
-					console.log(value1)
+					console.log("The Current1:",value1)
 					gauges[key].redraw(value1);
 				}
 				else if(key == "sensor2"){
 					var value2 = ssensor2;
-					console.log(value2)
+					console.log("The Current2:",value2)
 					gauges[key].redraw(value2);
 				}
 				else if(key == "sensor3"){
 					var value3 = ssensor3;
-					console.log(value3)
+					console.log("The Current3:",value3)
 					gauges[key].redraw(value3);
 				}
 			}
@@ -154,17 +156,17 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 
 			createGauges();
 	        pubnub.subscribe({
-	            channel: "aravind",
+	            channel: "IoTEnergyGrid-App",
 				message: function(sm){
-					sbulb = sm.bulb
-					sfan = sm.fan
-					sgrid = sm.grid
-					sen1 = sm.sensor1
-					sen2 = sm.sensor2
-					sen3 = sm.sensor3
-					console.log(sm)
-					console.log(sm.bulb,sm.fan,sm.grid)
-					console.log(sm.sensor1,sm.sensor2,sm.sensor3)
+					sbulb = sm.load_1_status //bulb
+					sfan = sm.load_2_status  //fan
+					sgrid = sm.Grid
+					sen1 = sm.Current1
+					sen2 = sm.Current2
+					sen3 = sm.Current3
+					// console.log(sm)
+					console.log("Load1:",sm.load_1_status,"Load2:",sm.load_2_status,"Grid:",sm.Grid)
+					console.log("Current1:",sm.Current1,"Current2:",sm.Current2,"Current3:",sm.Current3)
 
 					if(sm == "undefined"){
 						console.log("undefined section")
