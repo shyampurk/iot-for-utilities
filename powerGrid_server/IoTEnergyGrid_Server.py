@@ -9,16 +9,51 @@ import time
 import logging
 import datetime
 
-# Database connection information
-databaseConnectionInfo = {"Database name":"BLUDB","User ID":"dash6278","Password":"xdS5nnFhY8kq","Host name":"dashdb-entry-yp-dal09-10.services.dal.bluemix.net","Port number":"50000"}
-DatabaseSchema = 'DASH6278'
-
-# PUBNUB KEYS
-pub_key ='pub-c-06039a79-c423-4a3f-a838-30d86ee08a5e'
-sub_key ='sub-c-8bafb53a-682a-11e6-933d-02ee2ddab7fe'
+import ConfigParser
 
 LOG_FILENAME = 'IoTEnergyGrid_Logs.log'
 logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG,format='%(asctime)s, %(levelname)s, %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+
+
+#Importing the Config File and Parsing the file using the ConfigParser
+config_file = "./config.ini"
+Config = ConfigParser.ConfigParser()
+Config.read(config_file)
+
+
+'''****************************************************************************************
+Function Name 	:	ConfigSectionMap
+Description		:	Parsing the Config File and Extracting the data and returning it
+Parameters 		:	section - section to be parserd
+****************************************************************************************'''
+def ConfigSectionMap(section):
+    dict1 = {}
+    options = Config.options(section)
+    for option in options:
+        try:
+            dict1[option] = Config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            logging.debug("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+
+# Initialize the Pubnub Keys 
+PUB_KEY = ConfigSectionMap("pubnub_init")['pub_key']
+SUB_KEY = ConfigSectionMap("pubnub_init")['sub_key']
+
+#Database Related Variables and Lists 
+DB_SCHEMA = ConfigSectionMap("database")['databaseschema'] 
+DB_HOST = ConfigSectionMap("database")['hostname']
+DB_NAME = ConfigSectionMap("database")['databasename']
+DATABASE_TABLE_NAME = ConfigSectionMap("database")['tablename']
+DB_USER_NAME = ConfigSectionMap("database")['userid']
+DB_PASSWORD = ConfigSectionMap("database")['password']
+DB_PORT = ConfigSectionMap("database")['portnumber']
+
+
 
 
 '''****************************************************************************************
@@ -26,22 +61,18 @@ Function Name 	:	connectioncheck_handler() (dB operation)
 Description		:	Function to check the connection to the DataBase is True/False
 Parameters 		:	- 
 ****************************************************************************************'''
-
 def connectioncheck_handler():
 	global connection,url
 	if (active(connection) == False):
 		connection = ibm_db.pconnect(url ,'' ,'')
 	return None	
 
-
-
-
 '''****************************************************************************************
 Function Name 	:	publish_handler  (pubnub operation)
 Description		:	Function used to publish the data to the client
-Parameters 		:	channel          - Name of the Table in DataBase from where Data is being Extracted					  
+Parameters 		:	channel  - Name of the Table in DataBase from where Data is being Extracted
+					result   - Dictionary that contains the values to be sent to the client								  
 ****************************************************************************************'''
-
 def publish_handler(channel,result):
 	pbtry = 0
 	while (pbtry<3):
@@ -51,12 +82,12 @@ def publish_handler(channel,result):
 			if (pbreturn[0] == 1):
 				return None
 			elif(pbreturn[0] == 0):
-				logging.error("The publish return error  %s for the Task %s for the client %s"%(pbreturn[1],channel,details['DISPLAY_NAME']))
+				logging.error("The publish return error  %s for the Task %s for the client %s"%(pbreturn[1],channel))
 				pbtry+=1
 			else:
 				pass
 		except Exception as error_pdhandler:
-			logging.error("The publish function Exception %s,%s for the Task %s for the client %s"%(error_pdhandler,type(error_pdhandler),channel,details['DISPLAY_NAME']))
+			logging.error("The publish function Exception %s,%s for the Task %s for the client %s"%(error_pdhandler,type(error_pdhandler),channel))
 			pbtry+=1
 
 
@@ -69,7 +100,7 @@ def dBop_Insert(message):
 	global connection
 	connectioncheck_handler()	
 	try:	
-		upload_query = "INSERT INTO "+DatabaseSchema+".IOT_ENERGYGRID_TABLE VALUES (DEFAULT,\'"+str(message["Current1"])+"\',\'"+str(message["Current2"])+"\',\'"+str(message["Current3"])+"\',\'"+str(message["Energy1"])+"\',\'"+str(message["Energy2"])+"\',\'"+str(message["Energy3"])+"\',\'"+str(message["TotalEnergy"])+"\',\'"+str(message["Time"])+"\')"
+		upload_query = "INSERT INTO "+DB_SCHEMA+"."+DATABASE_TABLE_NAME+" VALUES (DEFAULT,\'"+str(message["Current1"])+"\',\'"+str(message["Current2"])+"\',\'"+str(message["Current3"])+"\',\'"+str(message["Energy1"])+"\',\'"+str(message["Energy2"])+"\',\'"+str(message["Energy3"])+"\',\'"+str(message["TotalEnergy"])+"\',\'"+str(message["Time"])+"\')"
 		stmt = ibm_db.exec_immediate(connection, upload_query)
 		ibm_db.free_stmt(stmt)
 	except Exception as e:
@@ -87,22 +118,29 @@ Parameters 		:   message  - message from the client
 ****************************************************************************************'''
 
 def callback(message,channels):
-	logging.info("Message from the Device",message)
-	channel = "IoTEnergyGrid-App" # App channel name
-	
-	if int(message["001"][0]) == 1 and int(message["001"][1] == 1):
-		grid = 1
-	else:
-		grid = 0
+	try:	
+		logging.info("Message from the Device",str(message))
+		channel = "IoTEnergyGrid-App" # App channel name
+		
+		if int(message["001"][0]) == 1 and int(message["001"][1] == 1):
+			grid = 1
+		else:
+			grid = 0
 
-	pubDict = {"load_1_status":message["001"][0],"load_2_status":message["001"][1],"Current1":message["001"][2],"Current2":message["001"][4],"Current3":message["001"][6],"Grid":grid}
-	publish_handler(channel,pubDict)		
-	dbmessage = pubDict
-	time = datetime.datetime.utcnow().replace(microsecond=0)
-	TotalEnergy = message["001"][3] + message["001"][5] + message["001"][7]
-	dbmessage.update({"Energy1":message["001"][3],"Energy2":message["001"][5],"Energy3":message["001"][7],"TotalEnergy":TotalEnergy,"Time":time})
-	dBop_Insert(dbmessage)
+		pubDict = {"load_1_status":message["001"][0],"load_2_status":message["001"][1],"Current1":message["001"][2],"Current2":message["001"][4],"Current3":message["001"][6],"Grid":grid}
+		publish_handler(channel,pubDict) #Calling the pubnub publish function		
+		dbmessage = pubDict
 
+		# Getting the present UTC Time
+		time = datetime.datetime.utcnow().replace(microsecond=0)
+
+		#Calculating the Total Energy 
+		TotalEnergy = message["001"][3] + message["001"][5] + message["001"][7]
+		
+		dbmessage.update({"Energy1":message["001"][3],"Energy2":message["001"][5],"Energy3":message["001"][7],"TotalEnergy":TotalEnergy,"Time":time})
+		dBop_Insert(dbmessage)  # Calling dashDB data upload function
+	except Exception as e:
+		logging.error("The error in callback %s,%s"(e,type(e)))	
 '''****************************************************************************************
 Function Name 	:	error
 Description		:	If error in the channel, prints the error
@@ -161,7 +199,7 @@ def pub_Init():
 	global pubnub
 	
 	try:
-		pubnub = Pubnub(publish_key=pub_key,subscribe_key=sub_key) 
+		pubnub = Pubnub(publish_key=PUB_KEY,subscribe_key=SUB_KEY) 
 		return True
 	except Exception as pubException:
 		logging.error("The error in pub_Init is %s,%s"%(pubException,type(pubException)))
@@ -194,7 +232,7 @@ def dashdB_Init():
 			  
 			else:
 			    hasVcap = False
-			    url = 'DATABASE=%s;uid=%s;pwd=%s;hostname=%s;port=%s;' % (databaseConnectionInfo["Database name"],databaseConnectionInfo["User ID"],databaseConnectionInfo["Password"],databaseConnectionInfo["Host name"],databaseConnectionInfo["Port number"])
+			    url = 'DATABASE=%s;uid=%s;pwd=%s;hostname=%s;port=%s;' % (DB_NAME,DB_USER_NAME,DB_PASSWORD,DB_HOST,DB_PORT)
    
 			connection = ibm_db.connect(url, '', '')
 			if (active(connection)):
