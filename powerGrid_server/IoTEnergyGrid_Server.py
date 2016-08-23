@@ -100,7 +100,7 @@ def dBop_Insert(message):
 	global connection
 	connectioncheck_handler()	
 	try:	
-		upload_query = "INSERT INTO "+DB_SCHEMA+"."+DATABASE_TABLE_NAME+" VALUES (DEFAULT,\'"+str(message["Current1"])+"\',\'"+str(message["Current2"])+"\',\'"+str(message["Current3"])+"\',\'"+str(message["Energy1"])+"\',\'"+str(message["Energy2"])+"\',\'"+str(message["Energy3"])+"\',\'"+str(message["TotalEnergy"])+"\',\'"+str(message["Time"])+"\')"
+		upload_query = "INSERT INTO "+DB_SCHEMA+"."+DATABASE_TABLE_NAME+" VALUES (DEFAULT,\'"+str(message["Current_ToGrid"])+"\',\'"+str(message["Current_SolarSupply"])+"\',\'"+str(message["Current_GridSupply"])+"\',\'"+str(message["Energy_ToGrid"])+"\',\'"+str(message["Energy_SolarSupply"])+"\',\'"+str(message["Energy_GridSupply"])+"\',\'"+str(message["TotalEnergy"])+"\',\'"+str(message["Time"])+"\')"
 		stmt = ibm_db.exec_immediate(connection, upload_query)
 		ibm_db.free_stmt(stmt)
 	except Exception as e:
@@ -127,7 +127,7 @@ def callback(message,channels):
 		else:
 			grid = 0
 
-		pubDict = {"load_1_status":message["001"][0],"load_2_status":message["001"][1],"Current1":message["001"][2],"Current2":message["001"][4],"Current3":message["001"][6],"Grid":grid}
+		pubDict = {"load_1_status":message["001"][0],"load_2_status":message["001"][1],"Current_ToGrid":message["001"][2],"Current_SolarSupply":message["001"][4],"Current_GridSupply":message["001"][6],"Grid":grid}
 		publish_handler(channel,pubDict) #Calling the pubnub publish function		
 		dbmessage = pubDict
 
@@ -137,7 +137,7 @@ def callback(message,channels):
 		#Calculating the Total Energy 
 		TotalEnergy = message["001"][3] + message["001"][5] + message["001"][7]
 		
-		dbmessage.update({"Energy1":message["001"][3],"Energy2":message["001"][5],"Energy3":message["001"][7],"TotalEnergy":TotalEnergy,"Time":time})
+		dbmessage.update({"Energy_ToGrid":message["001"][3],"Energy_SolarSupply":message["001"][5],"Energy_GridSupply":message["001"][7],"TotalEnergy":TotalEnergy,"Time":time})
 		dBop_Insert(dbmessage)  # Calling dashDB data upload function
 	except Exception as e:
 		logging.error("The error in callback %s,%s"(e,type(e)))	
