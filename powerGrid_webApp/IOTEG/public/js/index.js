@@ -161,12 +161,12 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 					sbulb = sm.load_1_status //bulb
 					sfan = sm.load_2_status  //fan
 					sgrid = sm.Grid
-					sen1 = sm.Current1
-					sen2 = sm.Current2
-					sen3 = sm.Current3
+					sen1 = sm.Current_ToGrid
+					sen2 = sm.Current_SolarSupply
+					sen3 = sm.Current_GridSupply
 					// console.log(sm)
 					console.log("Load1:",sm.load_1_status,"Load2:",sm.load_2_status,"Grid:",sm.Grid)
-					console.log("Current1:",sm.Current1,"Current2:",sm.Current2,"Current3:",sm.Current3)
+					console.log("Current_ToGrid:",sm.Current_ToGrid,"Current_SolarSupply:",sm.Current_SolarSupply,"Current_GridSupply:",sm.Current_GridSupply)
 
 					if(sm == "undefined"){
 						console.log("undefined section")

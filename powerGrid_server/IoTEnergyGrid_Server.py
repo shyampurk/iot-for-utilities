@@ -119,13 +119,14 @@ Parameters 		:   message  - message from the client
 
 def callback(message,channels):
 	try:	
-		logging.info("Message from the Device",str(message))
+		logging.info("Message from the Device"+str(message))
 		channel = "IoTEnergyGrid-App" # App channel name
 		
 		if int(message["001"][0]) == 1 and int(message["001"][1] == 1):
 			grid = 1
 		else:
 			grid = 0
+
 
 		pubDict = {"load_1_status":message["001"][0],"load_2_status":message["001"][1],"Current_ToGrid":message["001"][2],"Current_SolarSupply":message["001"][4],"Current_GridSupply":message["001"][6],"Grid":grid}
 		publish_handler(channel,pubDict) #Calling the pubnub publish function		
@@ -138,6 +139,7 @@ def callback(message,channels):
 		TotalEnergy = message["001"][3] + message["001"][5] + message["001"][7]
 		
 		dbmessage.update({"Energy_ToGrid":message["001"][3],"Energy_SolarSupply":message["001"][5],"Energy_GridSupply":message["001"][7],"TotalEnergy":TotalEnergy,"Time":time})
+		
 		dBop_Insert(dbmessage)  # Calling dashDB data upload function
 	except Exception as e:
 		logging.error("The error in callback %s,%s"(e,type(e)))	
