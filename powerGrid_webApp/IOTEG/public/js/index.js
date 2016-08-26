@@ -96,8 +96,8 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 			{
 				size: 140,
 				label: label,
-				min: undefined != min ? min : 0,
-				max: undefined != max ? max : 20,
+				min: undefined != min ? min : 0.00,
+				max: undefined != max ? max : 20.00,
 				minorTicks: 5
 			}
 			
@@ -113,7 +113,7 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 		
 		function createGauges()
 		{
-			createGauge("sensor1", "Amps",0,2);
+			createGauge("sensor1", "Amps",0.00,2.00);
 			createGauge("sensor2", "Amps",0,2);
 			createGauge("sensor3", "Amps",0,2);
 		}

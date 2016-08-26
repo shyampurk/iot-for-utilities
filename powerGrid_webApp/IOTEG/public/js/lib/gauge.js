@@ -130,7 +130,7 @@ function Gauge(placeholderName, configuration)
 		var pointerContainer = this.body.append("svg:g").attr("class", "pointerContainer");
 		
 		var midValue = (this.config.min + this.config.max) / 2;
-		
+		console.log(midValue)
 		var pointerPath = this.buildPointerPath(midValue);
 		
 		var pointerLine = d3.svg.line()
@@ -156,6 +156,7 @@ function Gauge(placeholderName, configuration)
 							.style("opacity", 1);
 		
 		var fontSize = Math.round(this.config.size / 10);
+
 		pointerContainer.selectAll("text")
 							.data([midValue])
 							.enter()
@@ -213,7 +214,7 @@ function Gauge(placeholderName, configuration)
 	{
 		var pointerContainer = this.body.select(".pointerContainer");
 		
-		pointerContainer.selectAll("text").text(Math.round(value));
+		pointerContainer.selectAll("text").text(value);
 		
 		var pointer = pointerContainer.selectAll("path");
 		pointer.transition()
@@ -258,4 +259,4 @@ function Gauge(placeholderName, configuration)
 	
 	// initialization
 	this.configure(configuration);	
-}
+}f

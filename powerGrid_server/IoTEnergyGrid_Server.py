@@ -118,7 +118,8 @@ Parameters 		:   message  - message from the client
 ****************************************************************************************'''
 
 def callback(message,channels):
-	try:	
+	try:
+		print message	
 		logging.info("Message from the Device"+str(message))
 		channel = "IoTEnergyGrid-App" # App channel name
 		
