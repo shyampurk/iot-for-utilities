@@ -113,7 +113,7 @@ var sm,sbulb,sfan,sgrid,sen1,sen2,sen3;
 		
 		function createGauges()
 		{
-			createGauge("sensor1", "Amps",0.00,2.00);
+			createGauge("sensor1", "Amps",0,2);
 			createGauge("sensor2", "Amps",0,2);
 			createGauge("sensor3", "Amps",0,2);
 		}

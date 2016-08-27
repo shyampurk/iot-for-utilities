@@ -130,7 +130,7 @@ function Gauge(placeholderName, configuration)
 		var pointerContainer = this.body.append("svg:g").attr("class", "pointerContainer");
 		
 		var midValue = (this.config.min + this.config.max) / 2;
-		console.log(midValue)
+		
 		var pointerPath = this.buildPointerPath(midValue);
 		
 		var pointerLine = d3.svg.line()
