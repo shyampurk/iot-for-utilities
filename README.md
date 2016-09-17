@@ -46,7 +46,7 @@ Step 2: In your dashboard, goto Catalog and select the Data and Analytics Sectio
 Step 3: Click on dashDB service icon and create a dashDB service instance for your space by filling following details,
 		
 			1) Space - Your space name where you want to add this service ( This might have been preselected if you have an existing space)
-    		2) App   - You can select "leave unbound"
+    			2) App   - You can select "leave unbound"
 			3) Service name - Enter a name for the service of your choice
 			4) Credential name - Enter a name for the Credential of your choice
 			5) Selected Plan - Choose 'Entry'.
@@ -60,65 +60,52 @@ Step 5: In the dashDB service home page, under the Side Menu, under the Connect 
 
         Make a note of Host Name, Port Number , Database Name, User ID and Password.
 
-Step 6: In the Side Main Menu click Tables,Here you can create the table for this application.
-		Click 'Add Table' to create the table for kitchen tracking application by entering the below SQL stamement in the bottom text area.
+Step 6: In the Side Main Menu, click on "Run SQL"  and you will be presented the Run SQL screen. Click on the 'Open' button and choose the SQL [schema file](powerGrid_server/dashDB.sql)
+
+		- The SQL command (CREATE_TABLE) will be displayed in the text area.
+		- Click on the 'Validate' button to ensure that SQL syntax is valid
+		- Click on the 'Run' button to execute the SQL statements.
+
+Step 7: If the Run command executed successfully , you will be able to see the new tables created under your dashDB instance
 		
-    CREATE TABLE "ENERGY" 
-    (
-      "SCALE_ID" VARCHAR(3),
-      "DATES" DATE,
-      "TIME" VARCHAR(10),
-      "QUANTITY" FLOAT,
-      "STATUS" INT 
-    );
+		- Click on "Tables" sub menu
+		- Select the table from "Table Name" dropdown to access the table schema and data
+		- You can find the tables named "IOT_ENERGYGRID_TABLE" listed under the dropdown
+		
 
 
 
-Step 7: Then click the button "Run DDL".
-		You can see the newly created table by selecting your schema and table name. Your schema is same as your username as displayed in Connect > Connection Information menu.
 
-### Deploying the Application Server
 
-Step 1 - Clone this github repository
+### Hosting the Application Server on Bluemix
 
-Step 2 - Update the parameters in the [config.ini]
+
+
+Step 1 - Update the parameters in the server [config file](powerGrid_server/config.ini) 
 
 	pub_key = PubNub Publish Key
 	sub_key = PubNub Subscribe Key
-	db_schema = User ID of the DashDB instance , in caps
-	db_name = Database name
-	db_host = Host Name
-	table_name = Table name is set to KITCHENTRACKERAPP
-	username = User ID of the DashDB instance
-	pwd = Password of dashDB instance
-	port = Port Number
+	databaseschema = User ID of the DashDB instance , in caps
+	databasename = Database name
+	hostname  = Database Host Name
+	tablename = Table name is set to KITCHENTRACKERAPP
+	userid = User ID of the DashDB instance
+	password = Password of dashDB instance
+	portnumber = Port Number
 	expiry = 0 ( Leave it to default value of zero)
 	
 
-Step 3 - Open the [manifest file] and update the follwing entries
+Step 2 - Open the [manifest file](powerGrid_server/manifest.yml) and update the follwing entries
 
-		applicationa:
-			- name : <name of the application on server>
-	
-		services
-			- <dashdb instance name>
-
-		where 
-			<name of the application on server> - Any desired name for the application
-			<dashdb instance name> - name of the dashdb service instance that you have created in the previous section.
+	Line 12 - Change 'IoTEnergyGrid_DashDB' to the actual dashDB service name you have given while creating the dashDB service instance ( Step 3 in 'Deploying DashDB Service').
 
 
-Step 4 - Login to Bluemix console via cf tool and select the space.
+Step 3 - Login to Bluemix console via cf tool and select the space.
 
-Step 5 - Change directory to the server application root (kitchen_tracker) under the cloned github repository.
+Step 4 - Change directory to the server application root directory (powerGrid_server) under the cloned github repository.
 
-Step 6 - Run the following command to push the application code to bluemix
+Step 5 - Run the following command to push the application code to bluemix
 
 		'cf push' 
 
-Once successfully pushed, the server application will be automatically started. You can check its state in your bluemix dashboard and see that its state is set to 'Running'
-
-
-
-  
-
+Once successfully pushed, the server application will be automatically started. You can check its state in your bluemix dashboard and see that it is set to 'Running'
