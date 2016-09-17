@@ -29,7 +29,23 @@ A web dashboard presents a real time view of the energy usage in the house, base
 
 ## Hardware setup
 
-The schematic diagram for the hardware setup is as follows.
+### Building the model electricity distribution circuit with solar cell and battery.
+
+The schematic diagram for the entire circuit setup is as follows.
+
+### Arduino YUN Controller application
+
+The Arduino YUN acts as the controller for sensing the current measurements.
+
+The source code for the controller software can be built using the Makefile. There are two steps involved in the build.
+
+#### Master Controller build
+The master controller is the OpenWRT application running on YUN
+
+#### Sensor Controller Build
+The sensor controller is a Arduino sketch that runs on the ATMega32 MCU that directly interfaces with the sensors.
+
+
 
 ## Server Setup
 
@@ -109,3 +125,11 @@ Step 5 - Run the following command to push the application code to bluemix
 		'cf push' 
 
 Once successfully pushed, the server application will be automatically started. You can check its state in your bluemix dashboard and see that it is set to 'Running'
+
+## Web Dashboard
+Once the application server is up on Bulemix, you can launch the web dashboard. 
+
+
+# Application working
+Fire up the circuit and you can see the energy stats getting captured in server DashDB and also displayed on the dashboard.
+The behaviour of the application will primarily depend on the power output of solar panel. It is advisable to test this with the solar panels exposed under sunny conditions.
