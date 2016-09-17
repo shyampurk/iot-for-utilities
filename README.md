@@ -1,11 +1,11 @@
-#Tracking Electricity with IoT using IBM Bluemix and PubNub
+#Tracking Electricity with IBM Bluemix and PubNub
 
 #Introduction 
 
 This is a project that demonstrates how can we track the electricity consumption of a household using IoT. This is based upon a miniature DC model of electric network within a house which is monitored by a few current sensors and Arduino YUN.
 
-#Setup
-The project setup consits of a model electricity distribution network for a home, a server application and a web dashboard.
+#Project Overview
+The project consits of a model electricity distribution network for a home, a server application and a web dashboard.
 
 The model electric distribution network consists of
 
@@ -39,7 +39,7 @@ The server has a DashDB component which provides a data store for capturing real
 
 Step 1: Login to Bluemix with your credentials.
 
-Step 2: In your dashboard, goto Catalog and select the Data and Analytics Section
+Step 2: In your Bluemix dashboard, goto Catalog and select the Data and Analytics Section
 			
 			You can see that the dashDB service will be listed under this section or you can search for dashDB 
 
