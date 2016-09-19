@@ -237,7 +237,10 @@ Once successfully pushed, the server application will be automatically started. 
 ## Web Dashboard
 Once the application server is up on Bulemix, you can launch the web dashboard. 
 
+<img src="/screenshots/dashboard_snap.jpg" align="center" width="600" >
 
 # Application working
 Fire up the circuit and you can see the energy stats getting captured in server DashDB and also displayed on the dashboard.
 The behaviour of the application will primarily depend on the power output of solar panel. It is advisable to test this with the solar panels exposed under sunny conditions.
+
+<img src="/screenshots/dashboard_demo_final.gif" align="center" width="900" >
