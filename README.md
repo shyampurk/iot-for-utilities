@@ -167,6 +167,8 @@ Step 2: In your Bluemix dashboard, goto Catalog and select the Data and Analytic
 			
 			You can see that the dashDB service will be listed under this section or you can search for dashDB 
 
+<img src="/screenshots/dashdbserviceselection.png" align="center" width="600" >
+
 Step 3: Click on dashDB service icon and create a dashDB service instance for your space by filling following details,
 		
 			1) Space - Your space name where you want to add this service ( This might have been preselected if you have an existing space)
@@ -190,6 +192,8 @@ Step 6: In the Side Main Menu, click on "Run SQL"  and you will be presented the
 		- Click on the 'Validate' button to ensure that SQL syntax is valid
 		- Click on the 'Run' button to execute the SQL statements.
 
+<img src="/screenshots/dashdbrunsql.png" align="center" width="600" >
+
 Step 7: If the Run command executed successfully , you will be able to see the new tables created under your dashDB instance
 		
 		- Click on "Tables" sub menu
@@ -197,13 +201,14 @@ Step 7: If the Run command executed successfully , you will be able to see the n
 		- You can find the tables named "IOT_ENERGYGRID_TABLE" listed under the dropdown
 		
 
+<img src="/screenshots/dashdbcreatedtable.png" align="center" width="600" >
 
 
 
 
 ### Hosting the Application Server on Bluemix
 
-
+Perform the followign steps for hosting the application server on IBM Bluemix. 
 
 Step 1 - Update the parameters in the server [config file](powerGrid_server/config.ini) 
 
@@ -235,7 +240,44 @@ Step 5 - Run the following command to push the application code to bluemix
 Once successfully pushed, the server application will be automatically started. You can check its state in your bluemix dashboard and see that it is set to 'Running'
 
 ## Web Dashboard
-Once the application server is up on Bluemix, you can launch the web dashboard. 
+
+The Web Dashboard is also hosted on Bluemix, under NodeJS SDK.
+
+In order to create a new NodeJS SDK service instance, perform the following steps.
+
+Step 1 : Choose the Node.js runtime from the Bluemix Catalog section
+
+<img src="/screenshots/SDKSELECTION.png" align="center" width="600" >
+
+STEP 2 : Select your space and give a name for your application
+
+<img src="/screenshots/APPCREATION.png" align="center" width="600" >
+
+STEP 3 : Download your Nodejs SDK starter code
+
+<img src="/screenshots/STARTCODE.png" align="center" width="600" >
+
+	--> The starter code comprises of 
+	1) "app.js"        -- contains the server-side initialization code for Node.js
+	2) "package.json"  -- contains of all the dependencies used in the server-side app
+	3) "manifest.yml"  -- generated and defines how the app should be deployed
+	4) "public"        -- Is a folder for containing the front-end web page files and related assets (HTML/CSS/JS), etc
+
+
+Copy the contents of the web dashboard [source folder](powerGrid_webApp/IOTEG/public/) under the public folder
+
+
+STEP 4 : Go to the root folder of the downloaded starter code and using the command "cf push" upload the application in the Bluemix
+
+	Note that you might have to log in to your bluemix account using the cf tool before you can initiate 'cf push' command. 
+
+STEP 5 : Open the Bluemix Dashboard and open your application and you can find your application URL		 
+
+
+
+You can launch the web dashboard on Firefox by typing the URL. Please not that currently this dashboard will work only on Mozilla Firefox. 
+
+Here is how the dashboard looks like.
 
 <img src="/screenshots/dashboard_snap.jpg" align="center" width="600" >
 
