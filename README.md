@@ -33,6 +33,8 @@ A web dashboard presents a real time view of the energy usage in the house, base
 
 The schematic diagram for the entire circuit setup is as follows.
 
+<img src="/screenshots/schematic.png" align="center" width="600" >
+
 ### Arduino YUN Controller application
 
 The Arduino YUN acts as the controller for sensing the current measurements.
