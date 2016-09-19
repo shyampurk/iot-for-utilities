@@ -39,13 +39,119 @@ The schematic diagram for the entire circuit setup is as follows.
 
 The Arduino YUN acts as the controller for sensing the current measurements.
 
-The source code for the controller software can be built using the Makefile. There are two steps involved in the build.
+The source code for the controller software can be built using the Makefile. There are two phases involved in the build.
 
 #### Master Controller build
-The master controller is the OpenWRT application running on YUN
+
+##### Build Environment Setup
+
+The master controller is the OpenWRT application running on YUN. Before initiating the build, we need to setup the build environment on the YUN since we will be using the Adruino YUN environment itself for building the software
+
+Step 1 : Install yun-gcc to Arduino YUN 
+
+	(i)	Before installing yun-gcc, install the 	following 
+
+			opkg update
+			opkg install binutils
+			opkg install make
+			opkg install tar
+
+	(ii)	Now we are ready to install the yun-gcc,
+
+			opkg -t /root install yun-gcc
+
+This package will take about 20 minutes or more to install so be patient, once it finishes you will be ready to compile simple c or c++ programs.It is prefered to download and install this package separately so that we can see what is going on:
+				
+			cd /mnt/sda1
+			wget http://downloads.arduino.cc/openwrtyun/1/packages/yun-gcc_4.6.2-2_ar71xx.ipk
+			opkg install yun-gcc_4.6.2-2_ar71xx.ipk
+
+Step 2 : Installing the glibc 
+
+	(i)	Download the Package glibc-source_2.19-18+deb8u1_all.deb in your laptop from the following link 
+
+			https://packages.debian.org/jessie/all/glibc-source/download
+
+	(ii)	Once the package is downloaded SCP the file to the YUN using the following command running on the 	
+			new terminal(modify the filename and IP address)
+
+			scp -r Downloads/(filename).deb root@192.168.XX.XX:/root/
+
+	(iii)	Once done install the glibc,
+
+			opkg -f /etc/opkg.conf -d ram update 
+			opkg -f /etc/opkg.conf -d ram install <package-name>
+
+Now Arduino-YUN is ready to compile and run the C Programs.
+
+Step 3: Edit the /etc/inittab file for UART Communication
+
+			nano /etc/inittab
+				
+Comment out the ttyATH0 line by adding # as prefix and save the file.				
+
+##### Master Build
+
+Steps to be followed to build the Master Controller software of IoT for Utilities application on Arduino YUN
+
+Step 1: Clone this repository bluemix-parking-meter from the github in your laptop/PC
+
+    			git clone https://github.com/shyampurk/iot-for-utilities/
+
+Step 2: Change the directory to the iot-for-utilities 
+
+    			cd iot-for-utilities
+
+Step 3: Clone the c-core library from the pubnub
+
+    			git clone https://github.com/pubnub/c-core.git
+
+Step 4: Copy iot-for-utilities folder using SCP to the YUN
+
+			scp -r iot-for-utilities root@192.168.XX.XX:/root/
+
+Step 5: Open up the terminal and follow the commands, make sure you know the IP address of the Arduino-YUN
+			
+			ssh root@yourname/local or ssh root@192.168.XX.XX	
+
+Step 6: Change the directory to the bluemix-parking-meter 
+
+    			cd iot-for-utilities 
+
+Step 7:	Modify the Pubnub Publish and Subscribe Keys in the yun_pubnub/main.c
+
+Step 8: To Build using the Makefile, just run
+
+    			make
+
+Step 9: You should see the executable file named ./solarMeter. This is the master controller program. To execute this program, run the file as follows.
+			
+			./solarMeter /dev/ttyATH0
+			
+			(where /dev/ttyATH0 is path of the UART device file)
 
 #### Sensor Controller Build
-The sensor controller is a Arduino sketch that runs on the ATMega32 MCU that directly interfaces with the sensors.
+
+Sensor controller build is for programming onboard the ATMega32 MCU which intefaces with the current sensors.
+
+Before preceeding, we need to install Arduino IDE 
+
+Installing the Arduino IDE
+
+	- Download and Install Latest Version of Arduino IDE from 
+
+                	[https://www.arduino.cc/en/Main/Software]
+
+	- Start Arduino IDE and Plug the Development Board
+
+Step 1: Open the file device/current_sense_new/current_sense_new.ino from this repo in Arduino IDE
+
+Step 2: Select the Board from Tools - > Board - > Arduino YUN
+
+Step 3: Select the USB Port from Tools - > Port - > yourname @ ipaddress [Arduino-YUN]
+
+Step 4: Upload the Code
+
 
 
 
