@@ -249,11 +249,11 @@ Step 1 : Choose the Node.js runtime from the Bluemix Catalog section
 
 <img src="/screenshots/SDKSELECTION.png" align="center" width="600" >
 
-STEP 2 : Select your space and give a name for your application
+Step 2 : Select your space and give a name for your application
 
 <img src="/screenshots/APPCREATION.png" align="center" width="600" >
 
-STEP 3 : Download your Nodejs SDK starter code
+Step 3 : Download your Nodejs SDK starter code
 
 <img src="/screenshots/STARTCODE.png" align="center" width="600" >
 
@@ -267,11 +267,11 @@ STEP 3 : Download your Nodejs SDK starter code
 Copy the contents of the web dashboard [source folder](powerGrid_webApp/IOTEG/public/) under the public folder
 
 
-STEP 4 : Go to the root folder of the downloaded starter code and using the command "cf push" upload the application in the Bluemix
+Step 4 : Go to the root folder of the downloaded starter code and using the command "cf push" upload the application in the Bluemix
 
 	Note that you might have to log in to your bluemix account using the cf tool before you can initiate 'cf push' command. 
 
-STEP 5 : Open the Bluemix Dashboard and open your application and you can find your application URL		 
+Step 5 : Open the Bluemix Dashboard and open your application and you can find your application URL		 
 
 
 
