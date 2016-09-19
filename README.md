@@ -235,7 +235,7 @@ Step 5 - Run the following command to push the application code to bluemix
 Once successfully pushed, the server application will be automatically started. You can check its state in your bluemix dashboard and see that it is set to 'Running'
 
 ## Web Dashboard
-Once the application server is up on Bulemix, you can launch the web dashboard. 
+Once the application server is up on Bluemix, you can launch the web dashboard. 
 
 <img src="/screenshots/dashboard_snap.jpg" align="center" width="600" >
 
