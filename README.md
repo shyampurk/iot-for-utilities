@@ -217,11 +217,11 @@ Step 1 - Update the parameters in the server [config file](powerGrid_server/conf
 	databaseschema = User ID of the DashDB instance , in caps
 	databasename = Database name
 	hostname  = Database Host Name
-	tablename = Table name is set to KITCHENTRACKERAPP
+	tablename = Table name is set to IOT_ENERGYGRID_TABLE
 	userid = User ID of the DashDB instance
 	password = Password of dashDB instance
 	portnumber = Port Number
-	expiry = 0 ( Leave it to default value of zero)
+	
 	
 
 Step 2 - Open the [manifest file](powerGrid_server/manifest.yml) and update the follwing entries
