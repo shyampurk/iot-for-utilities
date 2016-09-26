@@ -28,6 +28,13 @@ static void generate_uuid(pubnub_t *pbp);
 void prepare_json_data(int p_load_1,int p_load_2,float p_value_1,float p_value_2,float p_value_3, float p_value_4,float p_value_5,float p_value_6);
 int uartInit(char *port);
 
+/**************************************************************************************
+Function Name 	:	uartInit
+Description	:	Initialize the UART Serial Communication between the 
+			bridge 
+Parameters 	:	void
+Return 		:	int - when uart connection fails returns -1 else 0
+**************************************************************************************/
 int uartInit(char *port)
 {
 	g_uart0_filestream = open(port, O_RDWR | O_NOCTTY | O_NDELAY);
@@ -49,6 +56,13 @@ int uartInit(char *port)
 	return 0;
 }
 
+/******************************************************************************************
+Function Name 	:	generate_uuid
+Description	:	Genereates the UUID to publish the data in the pubnub
+Parameters 	:	pbp
+	pbp	:	Pubnub Connection Parameter
+Return 		:	None
+*****************************************************************************************/
 static void generate_uuid(pubnub_t *pbp)
 {
     char const *uuid_default = "zeka-peka-iz-jendeka";
@@ -64,6 +78,16 @@ static void generate_uuid(pubnub_t *pbp)
         printf("Generated UUID: %s\n", str_uuid.uuid);
     }
 }
+
+/******************************************************************************************
+Function Name 	:	pubnub_publishStatus
+Description	:	Publish the present status of the sensor status to the 
+			web App
+Parameters 	:	p_data
+	p_data  :	Parameter is the char pointer holds the data has to be 
+			sent to the web App
+Return 		:	int, if error in sent thr function returns -1 else 0
+*****************************************************************************************/
 
 int pubnub_publishStatus(char *p_data){
 	enum pubnub_res res;
@@ -107,6 +131,23 @@ int pubnub_publishStatus(char *p_data){
     return 0;
 }
 
+/***************************************************************************************
+Function Name 		:	prepare_json_data
+Description		:	With the Present Status of the sensor 
+				this function makes a json data to be sent as Response
+Parameters 		:	p_load_1, p_load_2, p_value_1, p_value_2, p_value_3,
+				p_value_4,p_value_5,p_value_6
+	p_load_1	:	Load Status of the sensor 1
+	p_load_2	:	Load Status of the sensor 2
+	p_value_1	:	Current value of sensor 1
+	p_value_2	:	Energy value of sensor 1
+	p_value_3	:	Current value of sensor 2
+	p_value_4	:	Energy value of sensor 2
+	p_value_5	:	Current value of sensor 3
+	p_value_6	:	Energy value of sensor 3
+Return 			:	void
+***************************************************************************************/
+
 void prepare_json_data(int p_load_1,int p_load_2,float p_value_1,float p_value_2,float p_value_3, float p_value_4,float p_value_5,float p_value_6)
 {
 	char l_buf [8] = "";
@@ -141,13 +182,20 @@ void prepare_json_data(int p_load_1,int p_load_2,float p_value_1,float p_value_2
 	memset(l_buf, 0, sizeof(l_buf));
 }
 
+/****************************************************************************************
+Function Name 		:	main
+Description		:	Initalize UART, Thread and publish if any status change
+				in the current sensors
+Parameters 		:	void
+Return 			:	int, if error in the function returns -1 else 0
+****************************************************************************************/
 int main(int argc,char *argv[])
 {
-  struct json_token *l_arr, *l_tok;
+  	struct json_token *l_arr, *l_tok;
 	if((uartInit(argv[1])) == 0)
 	{
 		while(1)
-	    {
+	    	{
 			if (g_uart0_filestream != -1)
 			{
 				char l_rxBuffer[150];
@@ -157,6 +205,13 @@ int main(int argc,char *argv[])
 					l_rxBuffer[l_rxLength] = '\0';
 				}
 				printf("%c\n",l_rxLength[122]);
+				/* Data Format: 
+					{"LOAD_1":value,"LOAD_2":value,"current_1":value
+					"energy_1:value,"current_2":value,"current_3":value,
+					"energy_2":value"}
+				*/
+				
+				//wait for complete data to be recived and process only that
 				if((l_rxLength > 32) && (l_rxBuffer[l_rxLength-1] == '}') && (l_rxBuffer[0] == '{')){
 					int l_load_1,l_load_2;
 					char l_current_1_str[5];
@@ -204,14 +259,15 @@ int main(int argc,char *argv[])
 					l_sensor6_value = atof(l_energy_3_str);
 
 					prepare_json_data(l_load_1,l_load_2,l_sensor1_value,l_sensor2_value,l_sensor3_value,l_sensor4_value,l_sensor5_value,l_sensor6_value);
-					//pubnub_publishStatus(g_jsonResponse);
+					pubnub_publishStatus(g_jsonResponse);
 					memset(g_jsonResponse, 0, sizeof(g_jsonResponse));
 	  				free(l_arr);
 				}
 			}
-        	usleep(500000);
+        		usleep(500000);
 		}
-	    close(g_uart0_filestream);
+		//Close the UART Connection
+		close(g_uart0_filestream);
 	}
 	else
 	{
@@ -220,3 +276,5 @@ int main(int argc,char *argv[])
 	}
 	return 0;
 }
+
+//End of the Program
