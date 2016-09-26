@@ -2,7 +2,7 @@
 
 ##Step 1 : Power Supply
 
-Build the power supply cicruit from the battery. This is emulating the grid supply in the form of DC with 5V and 12V output.
+Build the power supply circuit from the battery. This is emulating the grid supply in the form of DC with 5V and 12V output.
 
 <img src="/screenshots/Part-1 Power Supply.gif" align="center" width="900" >
 
