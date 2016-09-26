@@ -40,7 +40,7 @@ This schematic also includes a batery charging circuit which acts as a feeder to
 ### Hardware build steps
 This hardware setup is a bit complex due to the presence of additional circuit to emulate the electricity distribution from grid and the presence of solar panel. The steps for building the hardware can be broken down into four phases.
 
-Refer to the build steps to see a time lapse video of the four phases of building the hardware.
+Refer to the [build steps](HWBUILD.md) to see a time lapse video of the four phases of building the hardware.
 
 
 ### Arduino YUN Controller application
